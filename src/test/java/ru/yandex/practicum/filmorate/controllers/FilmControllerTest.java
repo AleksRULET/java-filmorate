@@ -18,7 +18,7 @@ class FilmControllerTest {
     }
     @Test
     void getAll() {
-        Assertions.assertEquals(0, filmController.getFilms().size());
+        Assertions.assertEquals(0, filmController.getAll().size());
         filmController.create(new Film(0, "Film", LocalDate.of(2000,1,1), "Desc", 90, 5));
         filmController.create(new Film(1, "Film2", LocalDate.of(2000,1,1), "Desc", 91, 5));
         Collection<Film> films =  filmController.getAll();
@@ -30,11 +30,11 @@ class FilmControllerTest {
     void create() {
         Film film1 = new Film(0, "Film", LocalDate.of(1895,12,28), "Desc", 90, 5);
         filmController.create(film1);
-        Assertions.assertEquals(filmController.getFilms().get(1).getName(), "Film");
-        Assertions.assertEquals(filmController.getFilms().get(1).getId(), 1);
-        Assertions.assertEquals(filmController.getFilms().get(1).getDescription(), "Desc");
-        Assertions.assertEquals(filmController.getFilms().get(1).getReleaseDate(), LocalDate.of(1895,12,28));
-        Assertions.assertEquals(filmController.getFilms().get(1).getDuration(), 90);
+        Assertions.assertEquals(filmController.getAll().get(0).getName(), "Film");
+        Assertions.assertEquals(filmController.getAll().get(0).getId(), 1);
+        Assertions.assertEquals(filmController.getAll().get(0).getDescription(), "Desc");
+        Assertions.assertEquals(filmController.getAll().get(0).getReleaseDate(), LocalDate.of(1895,12,28));
+        Assertions.assertEquals(filmController.getAll().get(0).getDuration(), 90);
 
         film1.setReleaseDate(LocalDate.of(1895, 12, 27));
 
@@ -51,11 +51,11 @@ class FilmControllerTest {
         filmController.create(film1);
         Film film2 = new Film(1, "Film2", LocalDate.of(1896,1,1), "Desc", 95, 1);
         filmController.update(film2);
-        Assertions.assertEquals(filmController.getFilms().get(1).getName(), "Film2");
-        Assertions.assertEquals(filmController.getFilms().get(1).getId(), 1);
-        Assertions.assertEquals(filmController.getFilms().get(1).getDescription(), "Desc");
-        Assertions.assertEquals(filmController.getFilms().get(1).getReleaseDate(), LocalDate.of(1896,1,1));
-        Assertions.assertEquals(filmController.getFilms().get(1).getDuration(), 95);
+        Assertions.assertEquals(filmController.getAll().get(0).getName(), "Film2");
+        Assertions.assertEquals(filmController.getAll().get(0).getId(), 1);
+        Assertions.assertEquals(filmController.getAll().get(0).getDescription(), "Desc");
+        Assertions.assertEquals(filmController.getAll().get(0).getReleaseDate(), LocalDate.of(1896,1,1));
+        Assertions.assertEquals(filmController.getAll().get(0).getDuration(), 95);
 
         Film film3 = new Film(0, "Film", LocalDate.of(1894,1,1), "Desc", 90, 5);
         RuntimeException exception = assertThrows(

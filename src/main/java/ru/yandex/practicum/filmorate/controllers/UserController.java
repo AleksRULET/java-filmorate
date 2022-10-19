@@ -1,29 +1,29 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @Slf4j
-@Data
+@RequestMapping("/users")
 public class UserController {
     private int id = 1;
     private HashMap<Integer, User> users = new HashMap<>();
 
-    @GetMapping("/users")
-    public Collection<User> getAll() {
+    @GetMapping
+    public List<User> getAll() {
         log.debug("Текущее количество пользователей: {}", users.size());
-        return users.values();
+        return new ArrayList<>(users.values());
     }
 
-    @PostMapping(value = "/users")
+    @PostMapping
     public User create(@Valid @RequestBody User user) {
         if (!user.getLogin().contains(" ")) {
             if (user.getName() == null) {
@@ -38,7 +38,7 @@ public class UserController {
         throw new ValidationException("Логин не может содержать пробелы");
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping
     public User update(@Valid @RequestBody User user) {
         if (users.containsKey(user.getId())) {
             if (!user.getLogin().contains(" ")) {
