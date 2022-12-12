@@ -1,24 +1,18 @@
 package ru.yandex.practicum.filmorate.storage.films;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
-import javax.validation.Valid;
-import javax.validation.ValidationException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
-    private int id = 1;
-    private HashMap<Integer, Film> films = new HashMap<>();
+    private Long id = 1L;
+    private HashMap<Long, Film> films = new HashMap<>();
 
-    public ArrayList<Film> getAll() {
+    public List<Film> getAll() {
         return new ArrayList<>(films.values());
     }
 
@@ -39,12 +33,24 @@ public class InMemoryFilmStorage implements FilmStorage {
         throw new ObjectNotFoundException("Фильм не найден");
     }
 
-    public Film getFilmByID(int id) {
+    public Film getFilmByID(Long id) {
         if (films.containsKey(id)) {
             return films.get(id);
         }
         throw new ObjectNotFoundException("Фильм не найден");
     }
 
+    public void like(Long id, Long userID) {
+        getFilmByID(id).like(userID);
+    }
 
+    public void removeLike(Long id, Long userID) {
+        getFilmByID(id).removeLike(userID);
+    }
+
+    public List<Film> getTheBest(Integer count) {
+        List<Film> sortedList = new ArrayList<>(getAll());
+        Collections.reverse(sortedList);
+        return sortedList.stream().limit(count).collect(Collectors.toList());
+    }
 }

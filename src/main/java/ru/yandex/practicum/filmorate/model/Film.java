@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 public class Film implements Comparable<Film> {
-    private int id;
+    private Long id;
     @NotBlank
     private String name;
     @NotNull
@@ -25,16 +25,16 @@ public class Film implements Comparable<Film> {
     @Positive
     private int duration;
     private int rate;
-    private Set<Integer> likes;
+    private Set<Long> likes;
 
-    public void like(int id) {
+    public void like(Long id) {
         if (likes == null) {
             likes = new HashSet<>();
         }
         likes.add(id);
     }
 
-    public void removeLike(int id) {
+    public void removeLike(Long id) {
         if (likes != null) {
             if (likes.contains(id)) {
                 likes.remove(id);

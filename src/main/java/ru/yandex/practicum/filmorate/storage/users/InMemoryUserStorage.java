@@ -12,8 +12,8 @@ import java.util.List;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
-    private int id = 1;
-    private HashMap<Integer, User> users = new HashMap<>();
+    private Long id = 1L;
+    private HashMap<Long, User> users = new HashMap<>();
 
     public List<User> getAll() {
         return new ArrayList<>(users.values());
@@ -50,14 +50,14 @@ public class InMemoryUserStorage implements UserStorage {
         throw new ObjectNotFoundException("Такого пользователя не существует");
     }
 
-    public User getUserByID(int id) {
+    public User getUserByID(Long id) {
         if (users.containsKey(id)) {
             return users.get(id);
         }
         throw new ObjectNotFoundException("Пользователь не найден");
     }
 
-    public void addFriend(int id, int otherId) {
+    public void addFriend(Long id, Long otherId) {
         if (users != null) {
             if (users.containsKey(id) && users.containsKey(otherId)) {
                 users.get(id).addFriend(otherId);
@@ -68,10 +68,10 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    public List<User> getFriends(int id) {
+    public List<User> getFriends(Long id) {
         if (users.containsKey(id)) {
             List<User> friends = new ArrayList<>();
-            for (Integer u: users.get(id).getFriends()) {
+            for (Long u: users.get(id).getFriends()) {
                 friends.add(users.get(u));
             }
             return friends;

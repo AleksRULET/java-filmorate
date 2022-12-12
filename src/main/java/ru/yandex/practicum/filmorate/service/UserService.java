@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Service
 public class UserService {
-    UserStorage userStorage;
+    private UserStorage userStorage;
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
@@ -29,28 +29,28 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    public User getUserByID(int id) {
+    public User getUserByID(Long id) {
         return userStorage.getUserByID(id);
     }
 
-    public void addFriend(int id, int friendID) {
+    public void addFriend(Long id, Long friendID) {
         userStorage.addFriend(id, friendID);
     }
 
-    public void deleteFriend(int id, int friendID) {
+    public void deleteFriend(Long id, Long friendID) {
         userStorage.getUserByID(id).getFriends().remove(friendID);
         userStorage.getUserByID(friendID).getFriends().remove(id);
     }
 
-    public List<User> getFriends(int id) {
+    public List<User> getFriends(Long id) {
         return userStorage.getFriends(id);
     }
 
-    public List<User> findMutualFriends(int id, int otherID) {
+    public List<User> findMutualFriends(Long id, Long otherID) {
         if ((userStorage.getUserByID(otherID).getFriends() != null) && (userStorage.getUserByID(id).getFriends() != null)) {
-            Set<Integer> otherList = userStorage.getUserByID(otherID).getFriends();
+            Set<Long> otherList = userStorage.getUserByID(otherID).getFriends();
             List<User> list = new ArrayList<>();
-            for (Integer u : userStorage.getUserByID(id).getFriends()) {
+            for (Long u : userStorage.getUserByID(id).getFriends()) {
                 if (otherList.contains(u)) {
                     list.add(userStorage.getUserByID(u));
                 }

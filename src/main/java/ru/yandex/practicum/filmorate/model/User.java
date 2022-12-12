@@ -14,16 +14,16 @@ public class User {
     @NotBlank
     private String login;
     private String name;
-    private int id;
+    private Long id;
     @NotBlank
     @Email
     private String email;
     @NotNull
     @PastOrPresent
     private LocalDate birthday;
-    private Set<Integer> friends;
+    private Set<Long> friends;
 
-    public void addFriend(int id) {
+    public void addFriend(Long id) {
         if (friends == null) {
             friends = new HashSet<>();
         }

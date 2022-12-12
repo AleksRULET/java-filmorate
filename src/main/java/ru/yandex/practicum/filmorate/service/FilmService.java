@@ -6,11 +6,10 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.films.FilmStorage;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FilmService {
-    FilmStorage filmStorage;
+    private FilmStorage filmStorage;
 
     @Autowired
     public FilmService(FilmStorage filmStorage) {
@@ -29,24 +28,19 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public Film getFilmByID(int id) {
+    public Film getFilmByID(Long id) {
         return filmStorage.getFilmByID(id);
     }
 
-    public void like(int id, int userID) {
-        filmStorage.getFilmByID(id).like(userID);
+    public void like(Long id, Long userID) {
+        filmStorage.like(id, userID);
     }
 
-    public void removeLike(int id, int userID) {
-        filmStorage.getFilmByID(id).removeLike(userID);
+    public void removeLike(Long id, Long userID) {
+        filmStorage.removeLike(id, userID);
     }
 
     public List<Film> getTheBest(Integer count) {
-        if (count == null) {
-            count = 10;
-        }
-        List<Film> sortedList = new ArrayList<>(filmStorage.getAll());
-        Collections.reverse(sortedList);
-        return sortedList.stream().limit(count).collect(Collectors.toList());
+        return filmStorage.getTheBest(count);
     }
 }

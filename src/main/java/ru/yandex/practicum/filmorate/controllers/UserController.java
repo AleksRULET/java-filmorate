@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,31 +40,31 @@ public class UserController {
     }
 
     @GetMapping(value = "{id}")
-    public User getUserByID(@PathVariable int id) {
+    public User getUserByID(@PathVariable Long id) {
         return userService.getUserByID(id);
     }
 
     @PutMapping(value = "{id}/friends/{friendID}")
-    public User addFriend(@PathVariable int id, @PathVariable int friendID) {
+    public User addFriend(@PathVariable Long id, @PathVariable Long friendID) {
         userService.addFriend(id, friendID);
         log.debug("Добавлен в друзья {}", userService.getUserByID(friendID));
         return userService.getUserByID(friendID);
     }
 
     @DeleteMapping(value = "{id}/friends/{friendID}")
-    public void deleteFriend(@PathVariable int id, @PathVariable int friendID) {
+    public void deleteFriend(@PathVariable Long id, @PathVariable Long friendID) {
         userService.deleteFriend(id, friendID);
         log.debug("Удален из друзей {}", userService.getUserByID(friendID));
 
     }
 
     @GetMapping(value = "{id}/friends")
-    public List<User> getFriends(@PathVariable int id) {
+    public List<User> getFriends(@PathVariable Long id) {
         return userService.getFriends(id);
     }
 
     @GetMapping(value = "{id}/friends/common/{otherID}")
-    public List<User> findMutualFriends(@PathVariable int id, @PathVariable int otherID) {
+    public List<User> findMutualFriends(@PathVariable Long id, @PathVariable Long otherID) {
         return userService.findMutualFriends(id, otherID);
     }
 }

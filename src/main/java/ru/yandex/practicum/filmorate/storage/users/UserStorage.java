@@ -8,8 +8,8 @@ public interface UserStorage {
     List<User> getAll();
     User create(User user);
     User update(User user);
-    User getUserByID(int id);
+    User getUserByID(Long id);
 
-    void addFriend(int id, int otherId);
-    List<User> getFriends(int id);
+    void addFriend(Long id, Long otherId);
+    List<User> getFriends(Long id);
 }
