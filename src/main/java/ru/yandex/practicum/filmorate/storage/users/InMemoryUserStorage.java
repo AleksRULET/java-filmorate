@@ -78,4 +78,11 @@ public class InMemoryUserStorage implements UserStorage {
         }
         throw new ObjectNotFoundException("Пользователь не найден");
     }
+    public void delete(Long id){
+        if (users.containsKey(id)) {
+            users.remove(id);
+            return;
+        }
+        throw new ObjectNotFoundException("Пользователь не найден");
+    }
 }

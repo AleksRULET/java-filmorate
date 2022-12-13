@@ -53,4 +53,12 @@ public class InMemoryFilmStorage implements FilmStorage {
         Collections.reverse(sortedList);
         return sortedList.stream().limit(count).collect(Collectors.toList());
     }
+
+    public void delete(Long id) {
+        if (films.containsKey(id)) {
+            films.remove(id);
+            return;
+        }
+        throw new ObjectNotFoundException("Фильм не найден");
+    }
 }

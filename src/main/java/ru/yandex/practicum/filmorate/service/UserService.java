@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.users.UserStorage;
 
@@ -38,8 +39,8 @@ public class UserService {
     }
 
     public void deleteFriend(Long id, Long friendID) {
-        userStorage.getUserByID(id).getFriends().remove(friendID);
-        userStorage.getUserByID(friendID).getFriends().remove(id);
+        userStorage.getUserByID(id).deleteFriend(friendID);
+        userStorage.getUserByID(friendID).deleteFriend(id);
     }
 
     public List<User> getFriends(Long id) {
@@ -58,5 +59,9 @@ public class UserService {
             return list;
         }
         return new ArrayList<>();
+    }
+
+    public void delete(Long id){
+        userStorage.delete(id);
     }
 }

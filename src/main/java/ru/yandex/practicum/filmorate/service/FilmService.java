@@ -43,4 +43,8 @@ public class FilmService {
     public List<Film> getTheBest(Integer count) {
         return filmStorage.getTheBest(count);
     }
+
+    public void delete(Long id){
+        filmStorage.delete(id);
+    }
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -28,6 +29,18 @@ public class User {
             friends = new HashSet<>();
         }
         friends.add(id);
+    }
+
+    public void deleteFriend(Long id){
+        if (friends != null) {
+            if (friends.contains(id)) {
+                friends.remove(id);
+                return;
+            } else {
+                throw new ObjectNotFoundException("Друг не найден");
+            }
+        }
+        throw new ObjectNotFoundException("Друзей нет");
     }
 }
 

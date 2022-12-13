@@ -16,7 +16,7 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
 
-    FilmService filmService;
+    private FilmService filmService;
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -65,5 +65,10 @@ public class FilmController {
     @GetMapping(value = "popular")
     public List<Film> getTheBest(@RequestParam(defaultValue = "10") Integer count) {
         return filmService.getTheBest(count);
+    }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Long id){
+        filmService.delete(id);
     }
 }
