@@ -6,9 +6,7 @@ import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.users.UserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserService {
@@ -31,6 +29,10 @@ public class UserService {
     }
 
     public User getUserByID(Long id) {
+        User user = userStorage.getUserByID(id);
+        if (user == null) {
+            throw new ObjectNotFoundException("Пользователь с id=" + id + " не найден");
+        }
         return userStorage.getUserByID(id);
     }
 
@@ -39,8 +41,7 @@ public class UserService {
     }
 
     public void deleteFriend(Long id, Long friendID) {
-        userStorage.getUserByID(id).deleteFriend(friendID);
-        userStorage.getUserByID(friendID).deleteFriend(id);
+        userStorage.deleteFriend(id, friendID);
     }
 
     public List<User> getFriends(Long id) {
@@ -48,17 +49,7 @@ public class UserService {
     }
 
     public List<User> findMutualFriends(Long id, Long otherID) {
-        if ((userStorage.getUserByID(otherID).getFriends() != null) && (userStorage.getUserByID(id).getFriends() != null)) {
-            Set<Long> otherList = userStorage.getUserByID(otherID).getFriends();
-            List<User> list = new ArrayList<>();
-            for (Long u : userStorage.getUserByID(id).getFriends()) {
-                if (otherList.contains(u)) {
-                    list.add(userStorage.getUserByID(u));
-                }
-            }
-            return list;
-        }
-        return new ArrayList<>();
+        return userStorage.findMutualFriends(id, otherID);
     }
 
     public void delete(Long id){
