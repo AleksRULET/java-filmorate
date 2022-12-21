@@ -1,4 +1,3 @@
 # java-filmorate
-Template repository for Filmorate project.
-
-![alt text](https://github.com/AleksRULET/java-filmorate/blob/add-database/SchemaBD.jpg?raw=true)
+Схема базы данных
+![Схема базы данных](https://github.com/AleksRULET/java-filmorate/blob/main/SchemaBD.png)
