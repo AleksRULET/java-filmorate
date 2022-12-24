@@ -1,13 +1,13 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.BadRequestException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -16,7 +16,7 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
 
-    private FilmService filmService;
+    private final FilmService filmService;
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -25,31 +25,34 @@ public class FilmController {
 
     @GetMapping
     public List<Film> getAll() {
-        log.debug("Текущее количество фильмов: {}", filmService.getAll().size());
-        return filmService.getAll();
+        List<Film> films = filmService.getAll();
+        log.debug("Текущее количество фильмов: {}", films.size());
+        return films;
     }
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) {
-        if (!(film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)))) {
-            log.debug("Добавлен фильм {}", film);
-            return filmService.create(film);
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new BadRequestException("Дата некорректна");
         }
-        throw new ValidationException("Дата некорректна");
+        log.debug("Добавлен фильм {}", film);
+
+        return filmService.create(film);
     }
 
     @PutMapping
     public Film update(@Valid @RequestBody Film film) {
-            if (!(film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28)))) {
-                log.debug("Обновлён фильм {}", film);
-                return filmService.update(film);
-            }
-            throw new ValidationException("Дата некорректна");
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            throw new BadRequestException("Дата некорректна");
+        }
+        log.debug("Обновлён фильм {}", film);
+
+        return filmService.update(film);
     }
 
     @GetMapping(value = "{id}")
-    public Film getFilmByID(@PathVariable Long id) {
-        return filmService.getFilmByID(id);
+    public Film getFilmById(@PathVariable Long id) {
+        return filmService.getFilmById(id);
     }
 
     @PutMapping("{id}/like/{userid}")
