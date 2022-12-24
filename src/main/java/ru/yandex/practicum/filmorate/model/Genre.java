@@ -11,9 +11,6 @@ import java.util.Objects;
 public class Genre {
     private Long id;
     private String name;
-
-
-
     @Override
     public int hashCode() {
         int prime = 31;

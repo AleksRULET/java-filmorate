@@ -16,7 +16,7 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
 
-    private FilmService filmService;
+    private final FilmService filmService;
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -48,8 +48,8 @@ public class FilmController {
     }
 
     @GetMapping(value = "{id}")
-    public Film getFilmByID(@PathVariable Long id) {
-        return filmService.getFilmByID(id);
+    public Film getFilmById(@PathVariable Long id) {
+        return filmService.getFilmById(id);
     }
 
     @PutMapping("{id}/like/{userid}")

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.storage.genre.DBGenreStorage;
+import ru.yandex.practicum.filmorate.storage.genre.DbGenreStorage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,17 +14,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DBGenreStorageTests {
+public class DbGenreStorageTests {
 
-    public final DBGenreStorage dbGenreStorage;
+    public final DbGenreStorage DbGenreStorage;
 
     @Test
     public void testGetMpa() {
-        assertEquals("Триллер", dbGenreStorage.getGenreById(4L).getName());
+        assertEquals("Триллер", DbGenreStorage.getGenreById(4L).getName());
     }
 
     @Test
     public void testGetMpas() {
-        assertEquals(6, dbGenreStorage.getAll().size());
+        assertEquals(6, DbGenreStorage.getAll().size());
     }
 }

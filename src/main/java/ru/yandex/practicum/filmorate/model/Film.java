@@ -45,10 +45,10 @@ public class Film implements Comparable <Film> {
         for (Genre g:getGenres()) {
             checkSet.add(g.getId());
         }
-            if (!(checkSet.contains(genre.getId()))) {
-                genres.add(genre);
-                return genre;
-            }
+        if (!(checkSet.contains(genre.getId()))) {
+            genres.add(genre);
+            return genre;
+        }
         return null;
     }
 

@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.GenreService;
-import ru.yandex.practicum.filmorate.storage.genre.DBGenreStorage;
+import ru.yandex.practicum.filmorate.storage.genre.DbGenreStorage;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/genres")
 public class GenreController {
-    GenreService genreService;
+    private final GenreService genreService;
 
     @Autowired
     public GenreController(GenreService genreService) {

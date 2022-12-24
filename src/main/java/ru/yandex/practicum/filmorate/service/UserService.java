@@ -7,17 +7,18 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.users.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private UserStorage userStorage;
+    private final UserStorage userStorage;
     @Autowired
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
     public List<User> getAll() {
-        return userStorage.getAll();
+        return userStorage.findAll();
     }
 
     public User create(User user) {
@@ -28,12 +29,8 @@ public class UserService {
         return userStorage.update(user);
     }
 
-    public User getUserByID(Long id) {
-        User user = userStorage.getUserByID(id);
-        if (user == null) {
-            throw new ObjectNotFoundException("Пользователь с id=" + id + " не найден");
-        }
-        return userStorage.getUserByID(id);
+    public User getUserById(Long id) {
+        return userStorage.findUserById(id).orElseThrow(() -> new ObjectNotFoundException("Пользователь с id=" + id + " не найден"));
     }
 
     public void addFriend(Long id, Long friendID) {
@@ -45,10 +42,10 @@ public class UserService {
     }
 
     public List<User> getFriends(Long id) {
-        return userStorage.getFriends(id);
+        return userStorage.findFriends(id);
     }
 
-    public List<User> findMutualFriends(Long id, Long otherID) {
+    public List<User> getMutualFriends(Long id, Long otherID) {
         return userStorage.findMutualFriends(id, otherID);
     }
 

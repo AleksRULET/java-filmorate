@@ -16,15 +16,15 @@ import java.util.*;
 
 @Component
 @Qualifier
-public class DBUserStorage implements UserStorage {
+public class DbUserStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public DBUserStorage(JdbcTemplate jdbcTemplate) {
+    public DbUserStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<User> getAll() {
+    public List<User> findAll() {
         String sqlQuery = "SELECT USER_ID, LOGIN, NAME, EMAIL, BIRTHDAY FROM USERS";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs));
     }
@@ -50,6 +50,7 @@ public class DBUserStorage implements UserStorage {
             return stmt;
         }, keyHolder);
         user.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+
         return user;
     }
 
@@ -64,16 +65,18 @@ public class DBUserStorage implements UserStorage {
         if (i == 0) {
             throw new ObjectNotFoundException("Такого пользователя не существует");
         }
-        return user;
-        }
 
-    public User getUserByID(Long id) {
+        return user;
+    }
+
+    public Optional<User> findUserById(Long id) {
         final String sqlQuery = "SELECT USER_ID, LOGIN, NAME, EMAIL, BIRTHDAY FROM USERS WHERE USER_ID = ?";
         final List<User> users = jdbcTemplate.query(sqlQuery,  (rs, rowNum) -> makeUser(rs), id);
         if (users.size() != 1) {
-            return null;
+            return Optional.empty();
         }
-        return users.get(0);
+
+        return Optional.ofNullable(users.get(0));
     }
 
     static User makeUser(ResultSet rs) throws SQLException {
@@ -96,10 +99,10 @@ public class DBUserStorage implements UserStorage {
         }
     }
 
-    public List<User> getFriends(Long id) {
+    public List<User> findFriends(Long id) {
         String sqlQuery = "SELECT UU.USER_ID, UU.LOGIN, UU.NAME, UU.EMAIL, UU.BIRTHDAY FROM USERS U JOIN USER_FRIEND UF on U.USER_ID = UF.USER_ID JOIN USERS UU on UF.FRIEND_ID = UU.USER_ID WHERE U.USER_ID = ?";
-        List<User> u = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), id);
-        return u;
+
+        return  jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), id);
     }
 
     public void delete(Long id) {
@@ -111,8 +114,8 @@ public class DBUserStorage implements UserStorage {
         String sqlQuery = "SELECT DISTINCT U.USER_ID, U.LOGIN, U.NAME, U.EMAIL, U.BIRTHDAY FROM USER_FRIEND UF " +
                 "JOIN USER_FRIEND UF2 on UF.FRIEND_ID = UF2.FRIEND_ID JOIN USERS U on UF.FRIEND_ID = U.USER_ID "
                 + " WHERE UF.USER_ID = (?) and UF2.USER_ID = (?)";
-        List<User> u = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), id, otherID);
-        return u;
+
+        return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), id, otherID);
     }
 
     public void deleteFriend(Long id, Long friendID) {

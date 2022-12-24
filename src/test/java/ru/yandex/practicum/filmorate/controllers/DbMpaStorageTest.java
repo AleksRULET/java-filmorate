@@ -6,7 +6,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.storage.mpa.DBMpaStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.DbMpaStorage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,9 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DBMpaStorageTest {
+public class DbMpaStorageTest {
 
-    public final DBMpaStorage mpaRepository;
+    public final DbMpaStorage mpaRepository;
 
     @Test
     public void testGetMpa() {

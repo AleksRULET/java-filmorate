@@ -15,7 +15,6 @@ public class Mpa {
         int prime = 31;
         return prime* Objects.hash(id, name);
     }
-
     @Override
     public String toString() {
         return String.format("Mpa(id=&d, name=&s)", id, name);
