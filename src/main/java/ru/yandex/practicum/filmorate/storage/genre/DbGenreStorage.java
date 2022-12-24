@@ -8,16 +8,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -28,18 +24,18 @@ public class DbGenreStorage implements GenreStorage{
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Genre> getAll() {
+    public List<Genre> findAll() {
         String sqlQuery = "SELECT GENRE_ID, NAME FROM GENRES";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeGenre(rs));
     }
 
-    public Genre getGenreById(Long id) {
+    public Optional<Genre> findGenreById(Long id) {
         String sqlQuery = "SELECT GENRE_ID, NAME FROM GENRES WHERE GENRE_ID = ?";
-        List<Genre> g = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeGenre(rs), id);
-        if (g.isEmpty()) {
-            throw new ObjectNotFoundException("Жанр не найден");
+        List<Genre> genres = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeGenre(rs), id);
+        if (genres.isEmpty()) {
+            return Optional.empty();
         }
-        return g.get(0);
+        return Optional.ofNullable(genres.get(0));
     }
 
     static Genre makeGenre (ResultSet rs) throws SQLException {
@@ -90,7 +86,8 @@ public class DbGenreStorage implements GenreStorage{
             Set<Genre> newSet = new HashSet<>();
             for (Genre genre : film.getGenres()) {
                 if (!newSet.contains(genre) && !checkMAP.contains(genre.getId())) {
-                    sql = String.valueOf(String.format("INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) VALUES(%d, %d);", film.getId(), genre.getId()));
+                    sql = String.valueOf(String.format("INSERT INTO FILM_GENRE (FILM_ID, GENRE_ID) " +
+                            "VALUES(%d, %d);", film.getId(), genre.getId()));
                     jdbcTemplate.execute(sql);
                     checkMAP.add(genre.getId());
                     newSet.add(genre);

@@ -1,11 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.films.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
@@ -17,7 +16,6 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final GenreStorage genreStorage;
     private final MpaStorage mpaStorage;
-
 
     public List<Film> getAll() {
         List<Film> films = filmStorage.findAll();
@@ -35,10 +33,12 @@ public class FilmService {
     }
 
     public Film update(Film film) {
-        Film f = filmStorage.update(film);
+        if(filmStorage.update(film) == 0) {
+            throw new ObjectNotFoundException("Фильм не найден");
+        }
         genreStorage.setFilmGenre(film);
 
-        return f;
+        return film;
     }
 
     public Film getFilmById(Long id) {
@@ -50,11 +50,11 @@ public class FilmService {
     }
 
     public void like(Long id, Long userID) {
-        filmStorage.like(id, userID);
+        if (filmStorage.like(id, userID) == 0) throw  new ObjectNotFoundException("Пользователь с id=" + id + " или с id=" + userID + " не найден");
     }
 
     public void removeLike(Long id, Long userID) {
-        filmStorage.removeLike(id, userID);
+        if (filmStorage.removeLike(id, userID) == 0) throw  new ObjectNotFoundException("Лайк не найден");
     }
 
     public List<Film> getTheBest(Integer count) {

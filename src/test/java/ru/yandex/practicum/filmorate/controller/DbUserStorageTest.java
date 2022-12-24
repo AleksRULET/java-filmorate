@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.storage.films.DbFilmStorage;
-import ru.yandex.practicum.filmorate.storage.users.DbUserStorage;
+import ru.yandex.practicum.filmorate.storage.film.DbFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.DbUserStorage;
 
 import java.util.ArrayList;
 import java.util.List;

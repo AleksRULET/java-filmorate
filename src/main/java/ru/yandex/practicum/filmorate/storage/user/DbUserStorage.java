@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.users;
+package ru.yandex.practicum.filmorate.storage.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.*;
@@ -89,18 +89,16 @@ public class DbUserStorage implements UserStorage {
 
     public void addFriend(Long id, Long otherId) {
         String sqlQuery = "INSERT INTO USER_FRIEND (USER_ID, FRIEND_ID) VALUES (?,?)";
-        try {
-            int i = jdbcTemplate.update(sqlQuery
+        jdbcTemplate.update(sqlQuery
                     , id
                     , otherId
-            );
-        } catch (RuntimeException e) {
-            throw new ObjectNotFoundException("Такого пользователя не существует");
-        }
+        );
     }
 
     public List<User> findFriends(Long id) {
-        String sqlQuery = "SELECT UU.USER_ID, UU.LOGIN, UU.NAME, UU.EMAIL, UU.BIRTHDAY FROM USERS U JOIN USER_FRIEND UF on U.USER_ID = UF.USER_ID JOIN USERS UU on UF.FRIEND_ID = UU.USER_ID WHERE U.USER_ID = ?";
+        String sqlQuery = "SELECT UU.USER_ID, UU.LOGIN, UU.NAME, UU.EMAIL, UU.BIRTHDAY " +
+                "FROM USERS U JOIN USER_FRIEND UF on U.USER_ID = UF.USER_ID " +
+                "JOIN USERS UU on UF.FRIEND_ID = UU.USER_ID WHERE U.USER_ID = ?";
 
         return  jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeUser(rs), id);
     }

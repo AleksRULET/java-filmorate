@@ -8,16 +8,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import javax.management.Query;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,18 +25,18 @@ public class DbMpaStorage implements MpaStorage {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Mpa> getAll() {
+    public List<Mpa> findAll() {
         String sqlQuery = "SELECT RATING_ID, RATING_NAME FROM RATING_MPA";
         return jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeMpa(rs));
     }
 
-    public Mpa getRatingBy(Long id) {
+    public Optional<Mpa> findRatingById(Long id) {
         String sqlQuery = "SELECT RATING_ID, RATING_NAME FROM RATING_MPA WHERE RATING_ID = ?";
-        List<Mpa> m = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeMpa(rs), id);
-        if (m.isEmpty()) {
-            throw new ObjectNotFoundException("Рейтинг не найден");
+        List<Mpa> mpa = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeMpa(rs), id);
+        if (mpa.isEmpty()) {
+            return Optional.empty();
         }
-        return m.get(0);
+        return Optional.ofNullable(mpa.get(0));
     }
 
     static Mpa makeMpa (ResultSet rs) throws SQLException {

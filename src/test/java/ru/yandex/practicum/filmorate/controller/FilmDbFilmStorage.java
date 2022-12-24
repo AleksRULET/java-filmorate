@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,8 +9,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.films.DbFilmStorage;
-import ru.yandex.practicum.filmorate.storage.users.DbUserStorage;
+import ru.yandex.practicum.filmorate.storage.film.DbFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.DbUserStorage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,11 +36,7 @@ public class FilmDbFilmStorage extends TestData {
                 .forEach(DbFilmStorage::create);
     }
 
-    @Test
-    public void testGetFilm() {
-        film3.setId(DbFilmStorage.update(film3).getId());
 
-    }
 
     @Test
     public void testGetFilms() {
@@ -61,7 +57,8 @@ public class FilmDbFilmStorage extends TestData {
         film2.setGenres((new HashSet<>(List.of(
                 new Genre(6L,"Боевик")
         ))));
-        film2.setId(DbFilmStorage.update(film2).getId());
+        DbFilmStorage.update(film2);
+        film2.setId(8L);
         assertEquals(film2.toString(), "Film(id=8, name=test name, releaseDate=2000-01-01, description=test description, duration=1, mpa=Mpa(id=&d, name=&s), rate=2, genres=[ru.yandex.practicum.filmorate.model.Genre@96a7e239])");
     }
 

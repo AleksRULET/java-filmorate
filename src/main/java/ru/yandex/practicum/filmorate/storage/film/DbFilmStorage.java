@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.films;
+package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.sql.Date;
@@ -59,9 +58,9 @@ public class DbFilmStorage implements FilmStorage {
         return film;
     }
 
-    public Film update(Film film) {
+    public int update(Film film) {
         String sqlQuery = "UPDATE FILMS SET NAME = ?, RELEASE_DATE = ?, DESCRIPTION = ?, DURATION = ?, RATE = ?, RATING = ? WHERE FILM_ID = ?";
-        int i = jdbcTemplate.update(sqlQuery
+        return jdbcTemplate.update(sqlQuery
                 , film.getName()
                 , film.getReleaseDate()
                 , film.getDescription()
@@ -69,40 +68,30 @@ public class DbFilmStorage implements FilmStorage {
                 , film.getRate()
                 , film.getMpa().getId()
                 , film.getId());
-        if (i != 1) {
-            throw new ObjectNotFoundException("Фильм не найден");
-        }
-
-        return film;
     }
 
     public Optional<Film> findFilmById(Long id) {
         final String sqlQuery = "SELECT FILM_ID, FILMS.NAME, RELEASE_DATE, " +
                 "DESCRIPTION, DURATION, RATE, RATING_ID, RATING_NAME " +
                 "FROM FILMS JOIN RATING_MPA WHERE FILM_ID = ?";
-        try {
-            final List<Film> films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilm(rs), id);
-            return Optional.ofNullable(films.get(0));
-        } catch (RuntimeException runtimeException) {
+        final List<Film> films = jdbcTemplate.query(sqlQuery, (rs, rowNum) -> makeFilm(rs), id);
+        if (films.isEmpty()) {
             return Optional.empty();
         }
+
+        return Optional.ofNullable(films.get(0));
     }
 
-    public void like(Long id, Long userID) {
+    public int like(Long id, Long userID) {
         String sqlQuery = "INSERT INTO FAVORITE_FILMS (FILM_ID, USER_ID) VALUES(?,?)";
-        int i = jdbcTemplate.update(sqlQuery
+
+        return jdbcTemplate.update(sqlQuery
                 , id
                 , userID);
-        if (i != 1) {
-            throw new ObjectNotFoundException("Фильм не найден");
-        }
     }
 
-    public void removeLike(Long id, Long userID) {
-        String sqlQuery = "DELETE FROM FAVORITE_FILMS WHERE FILM_ID = ? AND USER_ID = ?";
-        if (jdbcTemplate.update(sqlQuery, id, userID) == 0) {
-            throw new ObjectNotFoundException("Пользователь не найден");
-        }
+    public int removeLike(Long id, Long userID) {
+        return jdbcTemplate.update("DELETE FROM FAVORITE_FILMS WHERE FILM_ID = ? AND USER_ID = ?", id, userID);
     }
 
     public List<Film> getTheBest(Integer count) {
@@ -130,6 +119,6 @@ public class DbFilmStorage implements FilmStorage {
             film.setGenres(new LinkedHashSet<>());
         }
 
-    return film;
+        return film;
     }
 }

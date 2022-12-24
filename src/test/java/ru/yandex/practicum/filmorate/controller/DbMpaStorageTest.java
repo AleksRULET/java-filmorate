@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,11 @@ public class DbMpaStorageTest {
 
     @Test
     public void testGetMpa() {
-        assertEquals("NC-17", mpaRepository.getRatingBy(5L).getName());
+        assertEquals("NC-17", mpaRepository.findRatingById(5L).get().getName());
     }
 
     @Test
     public void testGetMpas() {
-        assertEquals(5, mpaRepository.getAll().size());
+        assertEquals(5, mpaRepository.findAll().size());
     }
 }

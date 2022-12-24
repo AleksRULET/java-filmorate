@@ -11,12 +11,14 @@ import java.util.Objects;
 public class Mpa {
     private Long id;
     private String name;
+
     public int hashCode() {
         int prime = 31;
         return prime* Objects.hash(id, name);
     }
+
     @Override
     public String toString() {
-        return String.format("Mpa(id=&d, name=&s)", id, name);
+        return String.format("Mpa(id=%d, name=%s)", id, name);
     }
 }
