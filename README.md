@@ -1,4 +1,3 @@
 # java-filmorate
-Template repository for Filmorate project.
-
-![Alt text](https://raw.github.com/{USERNAME}/{REPOSITORY}/{BRANCH}/{PATH})
+Схема базы данных
+![Схема базы данных](https://github.com/AleksRULET/java-filmorate/blob/main/SchemaBD.png)
