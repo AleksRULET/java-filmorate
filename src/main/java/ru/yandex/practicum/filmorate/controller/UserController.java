@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -40,21 +40,21 @@ public class UserController {
     }
 
     @GetMapping(value = "{id}")
-    public User getUserByID(@PathVariable Long id) {
-        return userService.getUserByID(id);
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @PutMapping(value = "{id}/friends/{friendID}")
     public User addFriend(@PathVariable Long id, @PathVariable Long friendID) {
         userService.addFriend(id, friendID);
-        log.debug("Добавлен в друзья {}", userService.getUserByID(friendID));
-        return userService.getUserByID(friendID);
+        log.debug("Добавлен в друзья {}", userService.getUserById(friendID));
+        return userService.getUserById(friendID);
     }
 
     @DeleteMapping(value = "{id}/friends/{friendID}")
     public void deleteFriend(@PathVariable Long id, @PathVariable Long friendID) {
         userService.deleteFriend(id, friendID);
-        log.debug("Удален из друзей {}", userService.getUserByID(friendID));
+        log.debug("Удален из друзей {}", userService.getUserById(friendID));
 
     }
 
@@ -64,8 +64,8 @@ public class UserController {
     }
 
     @GetMapping(value = "{id}/friends/common/{otherID}")
-    public List<User> findMutualFriends(@PathVariable Long id, @PathVariable Long otherID) {
-        return userService.findMutualFriends(id, otherID);
+    public List<User> getMutualFriends(@PathVariable Long id, @PathVariable Long otherID) {
+        return userService.getMutualFriends(id, otherID);
     }
 
     @DeleteMapping("{id}")

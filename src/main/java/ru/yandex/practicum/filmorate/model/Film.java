@@ -2,19 +2,19 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.yandex.practicum.filmorate.exceptions.ObjectNotFoundException;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
-public class Film implements Comparable<Film> {
+@NoArgsConstructor
+public class Film implements Comparable <Film> {
     private Long id;
     @NotBlank
     private String name;
@@ -24,36 +24,36 @@ public class Film implements Comparable<Film> {
     private String description;
     @Positive
     private int duration;
+    private Mpa mpa;
     private int rate;
-    private Set<Long> likes;
+    private Set<Genre> genres;
 
-    public void like(Long id) {
-        if (likes == null) {
-            likes = new HashSet<>();
-        }
-        likes.add(id);
+    public Film(Long id, String name, LocalDate releaseDate, String description, int duration, int rate)  {
+        this.id = id;
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.description = description;
+        this.duration = duration;
+        this.rate = rate;
     }
 
-    public void removeLike(Long id) {
-        if (likes != null) {
-            if (likes.contains(id)) {
-                likes.remove(id);
-                return;
-            } else {
-                throw new ObjectNotFoundException("Лайк не найден");
-            }
+    public Genre addGenre(Genre genre) {
+        if (genres == null) {
+            genres = new HashSet<>();
         }
-        throw new ObjectNotFoundException("Лайков нет");
+        Set<Long> checkSet = new HashSet<>();
+        for (Genre g:getGenres()) {
+            checkSet.add(g.getId());
+        }
+        if (!(checkSet.contains(genre.getId()))) {
+            genres.add(genre);
+            return genre;
+        }
+        return null;
     }
 
     @Override
     public int compareTo(Film o) {
-        if (o.getLikes().isEmpty() || likes.isEmpty()) {
-            if (likes.isEmpty()) {
-                return 0;
-            }
-            return 1;
-        }
-        return this.likes.size() - o.getLikes().size();
+        return (int) (this.id - o.id);
     }
 }

@@ -1,47 +1,68 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.films.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
-    private FilmStorage filmStorage;
-
-    @Autowired
-    public FilmService(FilmStorage filmStorage) {
-        this.filmStorage = filmStorage;
-    }
+    private final FilmStorage filmStorage;
+    private final GenreStorage genreStorage;
+    private final MpaStorage mpaStorage;
 
     public List<Film> getAll() {
-        return filmStorage.getAll();
+        List<Film> films = filmStorage.findAll();
+        genreStorage.getFilmsGenres(films);
+        mpaStorage.getFilmsMpa(films);
+
+        return films;
     }
 
     public Film create(Film film) {
-        return filmStorage.create(film);
+        Film f = filmStorage.create(film);
+        genreStorage.setFilmGenre(film);
+
+        return f;
     }
 
     public Film update(Film film) {
-        return filmStorage.update(film);
+        if(filmStorage.update(film) == 0) {
+            throw new ObjectNotFoundException("Фильм не найден");
+        }
+        genreStorage.setFilmGenre(film);
+
+        return film;
     }
 
-    public Film getFilmByID(Long id) {
-        return filmStorage.getFilmByID(id);
+    public Film getFilmById(Long id) {
+        Film film = filmStorage.findFilmById(id).orElseThrow(() ->new ObjectNotFoundException("Фильм не найден"));
+        genreStorage.getFilmGenre(film);
+        mpaStorage.getFilmMpa(film);
+
+        return film;
     }
 
     public void like(Long id, Long userID) {
-        filmStorage.like(id, userID);
+        if (filmStorage.like(id, userID) == 0) throw  new ObjectNotFoundException("Пользователь с id=" + id + " или с id=" + userID + " не найден");
     }
 
     public void removeLike(Long id, Long userID) {
-        filmStorage.removeLike(id, userID);
+        if (filmStorage.removeLike(id, userID) == 0) throw  new ObjectNotFoundException("Лайк не найден");
     }
 
     public List<Film> getTheBest(Integer count) {
-        return filmStorage.getTheBest(count);
+        List<Film> films = filmStorage.getTheBest(count);
+
+        mpaStorage.getFilmsMpa(films);
+        genreStorage.getFilmsGenres(films);
+        return films;
     }
 
     public void delete(Long id){
