@@ -1,0 +1,508 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Filmorate API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "description": "Generated server url",
+      "url": "http://localhost:8080"
+    }
+  ],
+  "tags": [
+    {
+      "description": "API для работы с фильмами",
+      "name": "Фильмы"
+    },
+    {
+      "description": "API для работы с пользователями",
+      "name": "Пользователи"
+    },
+    {
+      "description": "API для работы с жанрами",
+      "name": "Жанры"
+    },
+    {
+      "description": "API для работы с возрастным рейтингом",
+      "name": "Рейтинги"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "Получение всех пользователей",
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Пользователи найдены"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      },
+      "put": {
+        "summary": "Обновление пользователя",
+        "operationId": "update",
+        "responses": {
+          "200": {
+            "description": "Данные пользователя обновлены"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      },
+      "post": {
+        "summary": "Создание пользователя",
+        "operationId": "create",
+        "responses": {
+          "200": {
+            "description": "Пользователь создан"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Получение пользователя по id",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "description": "id Пользователя",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пользователь по id найден"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      },
+      "delete": {
+        "summary": "Удаление пользователя по id",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "description": "id Пользователя",
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пользователь удалён"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/users/{id}/friends": {
+      "get": {
+        "summary": "Получение друзей определённого пользователя",
+        "operationId": "getFriends",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список друзей получен"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/users/{id}/friends/common/{otherID}": {
+      "get": {
+        "summary": "Получение общих с другим пользователем друзей",
+        "operationId": "getMutualFriends",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "otherID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список общих друзей получен"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/users/{id}/friends/{friendID}": {
+      "put": {
+        "summary": "Добавление в друзья",
+        "operationId": "addFriend",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "friendID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Друг добавлен"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      },
+      "delete": {
+        "summary": "Удаление из друзей",
+        "operationId": "deleteFriend",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "friendID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Друг удалён"
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/mpa": {
+      "get": {
+        "summary": "Получение всех рейтингов",
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "description": "Список рейтингов получен"
+          }
+        },
+        "tags": [
+          "Рейтинги"
+        ]
+      }
+    },
+    "/mpa/{id}": {
+      "get": {
+        "summary": "Получение рейтинга по id",
+        "operationId": "getRatingByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Рейтинг получен"
+          }
+        },
+        "tags": [
+          "Рейтинги"
+        ]
+      }
+    },
+    "/genres": {
+      "get": {
+        "summary": "Получение всех жанров",
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "description": "Список жанров получен"
+          }
+        },
+        "tags": [
+          "Жанры"
+        ]
+      }
+    },
+    "/genres/{id}": {
+      "get": {
+        "summary": "Получение жанра по id",
+        "operationId": "getGenreByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Жанр получен"
+          }
+        },
+        "tags": [
+          "Жанры"
+        ]
+      }
+    },
+    "/films": {
+      "get": {
+        "summary": "Получение всех фильмов",
+        "operationId": "getAll",
+        "responses": {
+          "200": {
+            "description": "Список фильмов получен"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      },
+      "put": {
+        "summary": "Обновление фильма",
+        "operationId": "update",
+        "responses": {
+          "200": {
+            "description": "Фильм обновлён"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      },
+      "post": {
+        "summary": "Добавление фильма",
+        "operationId": "create",
+        "responses": {
+          "200": {
+            "description": "Фильм добавлен"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      }
+    },
+    "/films/popular": {
+      "get": {
+        "summary": "Получение лучших фильмов",
+        "operationId": "getTheBest",
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Список лучших фильмов получен"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      }
+    },
+    "/films/{id}": {
+      "get": {
+        "summary": "Получение фильма по id",
+        "operationId": "getFilmById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Фильм по id найден"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      },
+      "delete": {
+        "summary": "Удаление фильма по id",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Фильм удалён"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      }
+    },
+    "/films/{id}/like/{userid}": {
+      "put": {
+        "summary": "Оценить фильм",
+        "operationId": "like",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Оценка фильму проставлена"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      },
+      "delete": {
+        "summary": "Удаление оценки фльма",
+        "operationId": "removeLike",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Оценка фильма удалена"
+          }
+        },
+        "tags": [
+          "Фильмы"
+        ]
+      }
+    }
+  }
+}
